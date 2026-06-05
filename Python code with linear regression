@@ -1,0 +1,53 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# DataFrame
+df = pd.DataFrame({
+    'X': [1,2,3,4,5,6,7,8,9,10],
+    'Y': [1,4,9,16,25,36,49,64,81,100]
+})
+
+X = df['X'].values
+Y = df['Y'].values
+
+# Initialize parameters
+m = 0
+b = 0
+
+learning_rate = 0.01
+epochs = 1000
+n = len(X)
+
+plt.scatter(X, Y,label="Actul data")
+plt.draw()
+for i in range(epochs):
+
+    # Predictions
+    Y_pred = m * X + b
+    # Gradients
+    dm = (-2/n) * np.sum(X * (Y - Y_pred))
+    db = (-2/n) * np.sum(Y - Y_pred)
+
+    # Update parameters
+    m = m - learning_rate * dm
+    b = b - learning_rate * db
+
+    if i % 100 == 0:
+        loss = np.mean((Y - Y_pred) ** 2)
+        print(f"Epoch {i}, Loss: {loss:.2f}")
+        plt.plot(X, Y_pred, linewidth=2, label=str(i)+"Epoch",alpha=0.8,linestyle='dashed')
+
+plt.plot(X, Y_pred, linewidth=2, label=str(i)+"Epoch")
+
+plt.xlabel("Hours Studied")
+plt.ylabel("Marks")
+plt.title("Linear Regression using Gradient Descent")
+plt.legend()
+
+plt.grid(True)
+
+plt.show()
+print("\nFinal Parameters:")
+print("Slope (m):", m)
+print("Intercept (b):", b)
