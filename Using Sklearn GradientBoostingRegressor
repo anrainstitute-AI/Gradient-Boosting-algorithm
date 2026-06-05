@@ -1,0 +1,43 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.ensemble import GradientBoostingRegressor
+
+# Data
+df = pd.DataFrame({
+    'X': [1,2,3,4,5,6,7,8,9,10],
+    'Y': [1,4,9,16,25,36,49,64,81,100]
+})
+
+X = df[['X']]
+Y = df['Y']
+
+# Train model
+model = GradientBoostingRegressor(
+    n_estimators=100,
+    learning_rate=0.1,
+    max_depth=3,
+    random_state=42
+)
+
+model.fit(X, Y)
+
+Y_pred = model.predict(X)
+
+df['Actual_Y'] = y
+df['Final_Prediction'] = np.round(Y_pred, 5)
+
+print("\nFinal DataFrame")
+print(df)
+
+# Plot
+plt.figure(figsize=(8,5))
+plt.scatter(X, Y, label='Actual Data')
+plt.plot(X, Y_pred, linewidth=2, label='Gradient Boosting Prediction')
+
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.title("Gradient Boosting Regression")
+plt.legend()
+plt.grid(True)
+plt.show()
