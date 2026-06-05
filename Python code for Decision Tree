@@ -1,0 +1,63 @@
+import pandas as pd
+import numpy as np
+from sklearn.tree import DecisionTreeRegressor
+
+# Sample Data
+df = pd.DataFrame({
+    'X': [1,2,3,4,5,6,7,8,9,10],
+    'Y': [1,4,9,16,25,36,49,64,81,100]
+})
+
+X = df[['X']]
+y = df['Y']
+
+# Learning Rate
+lr = 0.1
+
+# Step 1: Initial Prediction (Mean)
+F0 = np.mean(y)
+pred = np.full(len(y), F0)
+
+plt.scatter(X, Y,label="Actul data")
+plt.plot(X, pred, linewidth=2, label="First",alpha=0.8,linestyle='dashed')
+print("Initial Prediction (F0):", F0)
+
+# Number of boosting rounds
+n_trees = 100
+
+for i in range(n_trees):
+
+    # Step 2: Residuals
+    residuals = y - pred
+
+    # Step 3: Train Decision Tree on Residuals
+    tree = DecisionTreeRegressor(max_depth=3)
+    tree.fit(X, residuals)
+
+    # Tree Predictions
+    tree_pred = tree.predict(X)
+
+    # Step 4: Update Predictions
+    pred = pred + lr * tree_pred
+    if i % 10 == 0:
+        loss = np.mean((Y - pred) ** 2)
+        print(f"Epoch {i}, Loss: {loss:.5f}")
+        plt.plot(X, Y_pred, linewidth=2, label=str(i)+"Epoch",alpha=0.8,linestyle='dashed')
+
+# Final Results
+df['Actual_Y'] = y
+df['Final_Prediction'] = np.round(pred, 5)
+
+print("\nFinal DataFrame")
+print(df)
+
+plt.plot(X, pred, linewidth=2, label=str(i)+"Epoch")
+
+plt.xlabel("Hours Studied")
+plt.ylabel("Marks")
+plt.title("Linear Regression using Gradient Descent")
+plt.legend()
+
+plt.grid(True)
+
+plt.show()
